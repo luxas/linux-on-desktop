@@ -1,0 +1,18 @@
+[alias]
+        br = branch
+        s = status -s
+        ch = checkout
+        co = commit -m
+        a = add
+        dc = diff --cached
+        commits-since = "!f() { git log --oneline | sed \"/$1/q\" | wc -l; }; f"
+        tag-has = describe --contains
+        undo = reset --soft HEAD~
+        update-fork = "!git ch master && git pull upstream master && git push origin master"
+        rebranch = "!f(){ br=$(git rev-parse --symbolic-full-name --abbrev-ref HEAD); echo "${br}" && git ch master && git update-fork && git ch ${br} && git log -n ${1:-1} && git reset --soft HEAD~${1:-1}$
+        aa = "!git s | grep -v '?? ' | grep -v ' D ' | awk '{print $2}' | xargs git a"
+
+# If you want to rewrite the user name, email and signing key just by switching commit alias, add this:
+#       cowea = -c 'user.name=<name>' -c 'user.email=<email>' commit -S<gpgkeyid> -m
+#       amwea = -c 'user.name=<name>' -c 'user.email=<email>' am -S<gpgkeyid>
+
