@@ -2,7 +2,7 @@
 # Filter those packages from the current installed ones: apt list --installed | awk '{print $1}' | cut -d/ -f1 | grep -v -x -f wily -
 
 
-essentials: printers kubeadm scaleway golang gcloud ntfs nylas-mail spotify zoom openvpn docker.io pinentry-gtk2 sublime-text slack chrome
+essentials: printers hub kubeadm scaleway golang gcloud ntfs nylas-mail spotify zoom openvpn docker.io pinentry-gtk2 sublime-text slack chrome
 benchmarks: hardinfo sysbench hdparm gtkperf phoronix-test-suite geekbench
 ntfs: ntfs-3g cifs-utils
 printers: hl1110cupswrapper
@@ -84,6 +84,8 @@ git-config:
 	git config --global user.signingkey "<your gpg key id here>"
 	cat gitconfig >> ~/.gitconfig
 
+hub:
+	curl -sSL https://github.com/github/hub/releases/download/v2.2.9/hub-linux-amd64-2.2.9.tgz | tar -xz hub-linux-amd64-2.2.9/bin/hub --strip-components=2 -C /usr/local/bin
 
 gnome:
 	apt-get update && apt-get install -y \
