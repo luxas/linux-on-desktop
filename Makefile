@@ -78,7 +78,7 @@ google-talkplugin:
 kubeadm:
 	curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 	echo "deb http://apt.kubernetes.io/ kubernetes-xenial-unstable main" > /etc/apt/sources.list.d/kubernetes.list
-	apt-get update && apt-get install -y kubeadm docker.io
+	apt-get update && apt-get install -y kubeadm
 
 scaleway:
 	curl -sSL https://github.com/scaleway/scaleway-cli/releases/download/v1.12/scw_1.12_amd64.deb > /tmp/scaleway.deb
@@ -102,7 +102,15 @@ hl1110cupswrapper:
 	curl -sSL http://download.brother.com/welcome/dlf100421/hl1110cupswrapper-3.0.1-1.i386.deb > /tmp/hl1110.deb
 	dpkg -i /tmp/hl1110.deb
 
+git-config:
+	git config --global user.name "Lucas Käldström"
+	git config --global user.email "lucas.kaldstrom@hotmail.co.uk"
+	git config --global commit.gpgsign true
+	git config --global user.signingkey "<your gpg key id here>"
+
+# For a guide how to move gpg keys, see:
+
 ntfs: ntfs-3g cifs-utils
 printers: hl1110cupswrapper
 
-essentials: kubeadm scaleway golang gcloud ntfs nylas-mail spotify zoom openvpn docker.io pinentry-gtk2 sublime-text slack chrome
+essentials: printers kubeadm scaleway golang gcloud ntfs nylas-mail spotify zoom openvpn docker.io pinentry-gtk2 sublime-text slack chrome
