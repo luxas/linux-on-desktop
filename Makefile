@@ -15,13 +15,13 @@ macos: gnome
 ifeq ($(HOMEDIR),)
 	$(error HOMEDIR must be set)
 endif
-	
+
 	apt-get update && apt-get install -y \
 		plank \
 		gir1.2-clutter
 
 	mkdir -p $(HOMEDIR)/.themes $(HOMEDIR)/.icons /usr/share/plank/themes $(HOMEDIR)/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com
-	
+
 	curl -sSL https://dl.opendesktop.org/api/files/download/id/1489657686/Gnome-OSX-II-2-5-1.tar.xz | tar -xJ -C $(HOMEDIR)/.themes
 	curl -sSL https://github.com/keeferrourke/la-capitaine-icon-theme/archive/v0.4.0.tar.gz | tar -xz -C $(HOMEDIR)/.icons
 
@@ -44,32 +44,30 @@ nylas-mail:
 	curl -sSL https://edgehill.nylas.com/download?platform=linux-deb > /tmp/nylas.deb
 	dpkg -i /tmp/nylas.deb
 
-spotify: 
+spotify:
 	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BBEBDCB318AD50EC6865090613B00F1FD2C19886
 	echo "deb http://repository.spotify.com stable non-free" | tee /etc/apt/sources.list.d/spotify.list
 	apt-get update && apt-get install -y spotify-client
 
-zoom:
+zoom: libxcb-xtest0
 	curl -sSL https://zoom.us/client/latest/zoom_amd64.deb > /tmp/zoom.deb
 	dpkg -i /tmp/zoom.deb
 
-ntfs:
-	apt-get update && apt-get install -y \
-		ntfs-3g \
-		cifs-utils
+update:
+	apt-get update
 
-openvpn pinentry docker.io:
-	apt-get update && apt-get install -y $@
+openvpn pinentry-gtk2 docker.io libxcb-xtest0 cifs-utils ntfs-3g libappindicator1 libpango1.0-0: update
+	apt-get install -y $@
 
 sublime-text:
 	curl -sSL https://download.sublimetext.com/sublime-text_build-3126_amd64.deb > /tmp/sublime.deb
 	dpkg -i /tmp/sublime.deb
 
-slack:
+slack: libappindicator1
 	curl -sSL https://downloads.slack-edge.com/linux_releases/slack-desktop-2.5.2-amd64.deb > /tmp/slack.deb
 	dpkg -i /tmp/slack.deb
 
-chrome:
+chrome: libpango1.0-0
 	curl -sSL https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb > /tmp/chrome.deb
 	dpkg -i /tmp/chrome.deb
 
@@ -88,7 +86,8 @@ scaleway:
 
 golang:
 	curl -sSL https://storage.googleapis.com/golang/go1.8.1.linux-amd64.tar.gz | tar -xz -C /usr/local/
-	echo -e "export GOPATH=/home/lucas/luxas/go\nexport PATH=\$$PATH:/usr/local/go/bin:\$$GOPATH/bin" >> /etc/profile
+	echo "export GOPATH=/go\nexport PATH=\$$PATH:/usr/local/go/bin:\$$GOPATH/bin" >> /etc/profile
+	mkdir -p /go
 
 gcloud:
 	echo "deb https://packages.cloud.google.com/apt cloud-sdk-xenial main" > /etc/apt/sources.list.d/google-cloud-sdk.list
@@ -99,4 +98,11 @@ flash:
 	echo "deb http://archive.canonical.com/ubuntu yakkety partner" > /etc/apt/sources.list.d/flash-partner.list
 	apt-get update && apt-get install -y adobe-flashplugin
 
-# hl1110cupswrapper
+hl1110cupswrapper:
+	curl -sSL http://download.brother.com/welcome/dlf100421/hl1110cupswrapper-3.0.1-1.i386.deb > /tmp/hl1110.deb
+	dpkg -i /tmp/hl1110.deb
+
+ntfs: ntfs-3g cifs-utils
+printers: hl1110cupswrapper
+
+essentials: kubeadm scaleway golang gcloud ntfs nylas-mail spotify zoom openvpn docker.io pinentry-gtk2 sublime-text slack chrome
