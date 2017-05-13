@@ -1,8 +1,7 @@
 # Get a distro's default packages: curl -sSL http://old-releases.ubuntu.com/releases/15.10/ubuntu-15.10-desktop-amd64.manifest | awk '{print $1}' > wily
 # Filter those packages from the current installed ones: apt list --installed | awk '{print $1}' | cut -d/ -f1 | grep -v -x -f wily -
 
-
-essentials: printers hub kubeadm scaleway golang gcloud ntfs nylas-mail spotify zoom openvpn docker.io pinentry-gtk2 sublime-text slack chrome
+essentials: hub kubeadm scaleway golang gcloud ntfs nylas-mail spotify zoom openvpn docker.io pinentry-gtk2 sublime-text slack chrome
 benchmarks: hardinfo sysbench hdparm gtkperf phoronix-test-suite geekbench
 ntfs: ntfs-3g cifs-utils
 printers: hl1110cupswrapper
@@ -13,38 +12,41 @@ printers: hl1110cupswrapper
 update:
 	apt-get update
 
-openvpn pinentry-gtk2 docker.io libxcb-xtest0 cifs-utils ntfs-3g libappindicator1 libpango1.0-0 hardinfo sysbench hdparm gtkperf phoronix-test-suite: update
+openvpn pinentry-gtk2 docker.io libxcb-xtest0 cifs-utils ntfs-3g hardinfo sysbench hdparm gtkperf phoronix-test-suite: update
 	apt-get install -y $@
 
+en-apt:
+	sed -e "s|fi.|en.|g" -i /etc/apt/sources.list
+	apt-get update
 
 nylas-mail:
 	curl -sSL https://edgehill.nylas.com/download?platform=linux-deb > /tmp/nylas.deb
-	dpkg -i /tmp/nylas.deb
+	dpkg -i /tmp/nylas.deb; apt-get install -f -y
 
 spotify:
 	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BBEBDCB318AD50EC6865090613B00F1FD2C19886
 	echo "deb http://repository.spotify.com stable non-free" | tee /etc/apt/sources.list.d/spotify.list
 	apt-get update && apt-get install -y spotify-client
 
-zoom: libxcb-xtest0
+zoom:
 	curl -sSL https://zoom.us/client/latest/zoom_amd64.deb > /tmp/zoom.deb
-	dpkg -i /tmp/zoom.deb
+	dpkg -i /tmp/zoom.deb; apt-get install -f -y
 
 sublime-text:
 	curl -sSL https://download.sublimetext.com/sublime-text_build-3126_amd64.deb > /tmp/sublime.deb
-	dpkg -i /tmp/sublime.deb
+	dpkg -i /tmp/sublime.deb; apt-get install -f -y
 
 slack: libappindicator1
 	curl -sSL https://downloads.slack-edge.com/linux_releases/slack-desktop-2.5.2-amd64.deb > /tmp/slack.deb
-	dpkg -i /tmp/slack.deb
+	dpkg -i /tmp/slack.deb; apt-get install -f -y
 
 chrome: libpango1.0-0
 	curl -sSL https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb > /tmp/chrome.deb
-	dpkg -i /tmp/chrome.deb
+	dpkg -i /tmp/chrome.deb; apt-get install -f -y
 
 google-talkplugin:
 	curl -sSL https://dl.google.com/linux/direct/google-talkplugin_current_amd64.deb > /tmp/talkplugin.deb
-	dpkg -i /tmp/talkplugin.deb
+	dpkg -i /tmp/talkplugin.deb; apt-get install -f -y
 
 kubeadm:
 	curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
