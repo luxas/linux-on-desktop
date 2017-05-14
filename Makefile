@@ -12,50 +12,51 @@ printers: hl1110cupswrapper
 update:
 	apt-get update
 
-openvpn pinentry-gtk2 docker.io libxcb-xtest0 cifs-utils ntfs-3g hardinfo sysbench hdparm gtkperf phoronix-test-suite: update
+openvpn pinentry-gtk2 docker.io libxcb-xtest0 cifs-utils ntfs-3g hardinfo sysbench hdparm gtkperf phoronix-test-suite steam: update
 	apt-get install -y $@
 
 en-apt:
 	sed -e "s|fi.|en.|g" -i /etc/apt/sources.list
 	apt-get update
 
+install-deb:
+	curl -sSL $(DEB_URL) > /tmp/$(shell basename $(DEB_URL))
+	dpkg -i /tmp/$(shell basename $(DEB_URL)); apt-get install -f -y
+
 nylas-mail:
-	curl -sSL https://edgehill.nylas.com/download?platform=linux-deb > /tmp/nylas.deb
-	dpkg -i /tmp/nylas.deb; apt-get install -f -y
+	$(MAKE) install-deb DEB_URL="https://edgehill.nylas.com/download?platform=linux-deb"
+
+zoom:
+	$(MAKE) install-deb DEB_URL="https://zoom.us/client/latest/zoom_amd64.deb"
+
+sublime-text:
+	$(MAKE) install-deb DEB_URL="https://download.sublimetext.com/sublime-text_build-3126_amd64.deb"
+
+slack:
+	$(MAKE) install-deb DEB_URL="https://downloads.slack-edge.com/linux_releases/slack-desktop-2.5.2-amd64.deb"
+
+chrome:
+	$(MAKE) install-deb DEB_URL="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+
+google-talkplugin:
+	$(MAKE) install-deb DEB_URL="https://dl.google.com/linux/direct/google-talkplugin_current_amd64.deb"
+
+scaleway:
+	$(MAKE) install-deb DEB_URL="https://github.com/scaleway/scaleway-cli/releases/download/v1.12/scw_1.12_amd64.deb"
+
+steam:
+	$(MAKE) install-deb DEB_URL="https://github.com/scaleway/scaleway-cli/releases/download/v1.12/scw_1.12_amd64.deb"
 
 spotify:
 	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BBEBDCB318AD50EC6865090613B00F1FD2C19886
 	echo "deb http://repository.spotify.com stable non-free" | tee /etc/apt/sources.list.d/spotify.list
 	apt-get update && apt-get install -y spotify-client
 
-zoom:
-	curl -sSL https://zoom.us/client/latest/zoom_amd64.deb > /tmp/zoom.deb
-	dpkg -i /tmp/zoom.deb; apt-get install -f -y
-
-sublime-text:
-	curl -sSL https://download.sublimetext.com/sublime-text_build-3126_amd64.deb > /tmp/sublime.deb
-	dpkg -i /tmp/sublime.deb; apt-get install -f -y
-
-slack: libappindicator1
-	curl -sSL https://downloads.slack-edge.com/linux_releases/slack-desktop-2.5.2-amd64.deb > /tmp/slack.deb
-	dpkg -i /tmp/slack.deb; apt-get install -f -y
-
-chrome: libpango1.0-0
-	curl -sSL https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb > /tmp/chrome.deb
-	dpkg -i /tmp/chrome.deb; apt-get install -f -y
-
-google-talkplugin:
-	curl -sSL https://dl.google.com/linux/direct/google-talkplugin_current_amd64.deb > /tmp/talkplugin.deb
-	dpkg -i /tmp/talkplugin.deb; apt-get install -f -y
-
 kubeadm:
 	curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 	echo "deb http://apt.kubernetes.io/ kubernetes-xenial-unstable main" > /etc/apt/sources.list.d/kubernetes.list
 	apt-get update && apt-get install -y kubeadm
 
-scaleway:
-	curl -sSL https://github.com/scaleway/scaleway-cli/releases/download/v1.12/scw_1.12_amd64.deb > /tmp/scaleway.deb
-	dpkg -i /tmp/scaleway.deb
 
 golang:
 	curl -sSL https://storage.googleapis.com/golang/go1.8.1.linux-amd64.tar.gz | tar -xz -C /usr/local/
