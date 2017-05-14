@@ -4,10 +4,10 @@
 essentials: hub kubeadm scaleway golang gcloud ntfs nylas-mail spotify zoom openvpn docker.io pinentry-gtk2 sublime-text slack chrome
 benchmarks: hardinfo sysbench hdparm gtkperf phoronix-test-suite geekbench
 ntfs: ntfs-3g cifs-utils
-printers: hl1110cupswrapper
+printers: brother-hl-1110
 
 # Programs I possibly also might want to install in the future:
-# apache2-utils binfmt-support debhelper filezilla htop nmap qv4l2 screen toggldesktop xrdp
+# apache2-utils binfmt-support debhelper filezilla htop nmap qv4l2 screen toggldesktop xrdp vlc
 
 update:
 	apt-get update
@@ -72,9 +72,13 @@ flash:
 	echo "deb http://archive.canonical.com/ubuntu yakkety partner" > /etc/apt/sources.list.d/flash-partner.list
 	apt-get update && apt-get install -y adobe-flashplugin
 
-hl1110cupswrapper:
-	curl -sSL http://download.brother.com/welcome/dlf100421/hl1110cupswrapper-3.0.1-1.i386.deb > /tmp/hl1110.deb
-	dpkg -i /tmp/hl1110.deb
+# May not even be required, seems like the HL-1110 works out of the box on 17.04
+brother-hl-1110:
+	curl -sSL http://download.brother.com/welcome/dlf006893/linux-brprinter-installer-2.1.1-1.gz > /tmp/brother-hl-1110.gz
+	cd /tmp
+	gunzip /tmp/brother-hl-1110.gz
+	chmod +x ./brother
+	./brother
 
 geekbench:
 	curl -sSL http://cdn.primatelabs.com/Geekbench-4.1.0-Linux.tar.gz | tar -xz -C /usr/local/bin --strip-components=3
